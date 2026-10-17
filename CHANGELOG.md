@@ -2,20 +2,24 @@
 
 All redPeaRL releases, newest first. 0.7.0-beta.1 (16 Oct 2026) had a start-up fault and was never distributed.
 
-## 0.7.0-beta.4 (17 Oct 2026) - usage stats keep reporting
+## 0.7.0-beta.4 (17 Oct 2026) - usage stats fixed; first public-beta build
+
+First build of the public beta. (Internal builds made on 17 Oct while this fix was being chased were never
+distributed; this is the one that shipped.)
 
 ### Fixed
 
-- **Usage stats stopped after about 45 minutes.** The heartbeat sender did one blocking HTTPS request per report with a
-  deadline that only applied to asynchronous calls, so one stalled connection silenced the stats thread for the rest of
-  the session while mining carried on. Seen in every session on 16-17 Oct, including the first outside tester. The
-  request now runs with a hard 15-second deadline and gives up cleanly; the next report follows five minutes later.
-- The log now says when a stats report is not accepted (one line per failure streak, at the normal log level), so a
-  tester can tell at a glance that stats are not getting through. Mining is never affected either way.
+- **Usage stats stopped after a few reports.** The report sender hung after each exchange when it tore down its
+  connection objects on Windows; one hung report silenced stats for the rest of the session while mining carried on,
+  in every session since beta.1. The connection machinery (event loop, name resolver, TLS context with the Windows
+  roots) is now created once and kept for the life of the process, only the per-report stream comes and goes, each
+  report runs in its own thread under a 90-second watchdog, the response is read under a 15-second deadline, GPU facts
+  are queried once, and the log says when a report is refused, stuck or left a clean-up pending. Verified on the home
+  card: reports every five minutes for 81 minutes with a flat thread count. Mining is never affected by stats.
 
 ### Documentation
 
-- POOL-EXAMPLES.md: Kryptex custom share difficulty via the password line (d=N), with the pool's formula.
+- POOL-EXAMPLES.md: Kryptex custom share difficulty through the password line (d=N), with the pool's formula.
 
 ### Unchanged
 
