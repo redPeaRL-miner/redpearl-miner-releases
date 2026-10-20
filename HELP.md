@@ -13,7 +13,7 @@ support@redpearlminer.com.
    between the quotes. Give the machine a `worker` name if you like. Save. (The miner asks you to accept `EULA.md` on
    the next start; you can also set `accept_eula = true` in the file yourself.)
 4. Double-click `Start-redpearl-miner.bat` again. The miner runs a self-test on the GPU (about 10 seconds), connects to
-   the pool, and prints a status line every 30 seconds.
+   the pool, and prints a status line every 10 seconds (`status_seconds` in `[log]` changes that).
 
 If Windows Defender stops the download or the exe, see "Windows Defender" below.
 
@@ -27,13 +27,13 @@ config: C:\redPeaRL\redpearl.toml, 3 setting(s)
 pool: connecting to stratum+ssl://prl-us.kryptex.network:8048, worker rig1
 self-test: PASS (GPU 0, gfx1201)
 shape 4096 x 65536 x 8192, batch 4
-mining started - status every 30 s
+mining started - status every 10 s
 Stratum: share accepted (57 ms)
 redPeaRL 0.7.0-beta.4 | 140.7 TH/s | 140.7 avg 1m | A 1 R 0 | 488 GH/J 288 W 2.50 GHz 751 mV | 48C hot 75C mem 74C fan 1747 rpm
 ```
 
 The status line, left to right: hashrate now and the 1-minute (later 15-minute) average, shares accepted (A) and
-rejected (R), efficiency in GH per joule, board power, GPU clock and voltage, edge / hotspot / memory temperatures and
+rejected (R) - and `RC n` after the pool connection was lost and re-made n times - efficiency in GH per joule, board power, GPU clock and voltage, edge / hotspot / memory temperatures and
 fan speed. The hashrate is pool-equivalent: what the pool credits per worker matches this figure.
 
 ## redpearl.toml
@@ -51,6 +51,7 @@ containers) sit in between.
 | `device` | GPU index to mine on, only with several GPUs (one GPU per process in this beta) |
 | `[log] level` | `quiet`, `normal`, `verbose`, `debug` |
 | `[log] file`, `file_size_mb`, `file_count` | the log file ring (default `miner.log` next to the exe, 10 MB x 5) |
+| `[log] status_seconds` | seconds between the status lines in the console, 5-600 (default 10) |
 | `stats` | anonymous usage stats, `true` (default) or `false` - see below |
 | `accept_eula` | `true` once you have read EULA.md and agree; the miner does not run until then |
 | `[advanced] batch` | attempts per GPU batch, 4-32; the default 4 is best on power-limited cards |
@@ -147,6 +148,16 @@ the same status line. Good for comparing settings.
 - **Hotspot above 100 C** - the fan curve is yours to set in Adrenalin; the miner does not touch it.
 - **"CONFIG ERROR"** at start - the message names the key and the allowed values; fix the line it points to.
 - **"Licence not accepted yet"** - set `accept_eula = true` in `redpearl.toml` after reading EULA.md.
+- **"GPU stall: no batch finished in 90 s"** and the miner exits with code 4 - the card stopped answering (a hung
+  driver, an unstable undervolt). `Start-redpearl-miner.bat` restarts the miner after 10 seconds, up to 50 times;
+  if it keeps happening, put the card at stock. `stall_seconds` in `[advanced]` changes the limit, 0 switches it off.
+- **Exit codes** the launcher reacts to: 0 stopped by you, 2 a configuration message (the launcher stops so you
+  can read it), 4 GPU stall, 5 no usable GPU found (the launcher retries - a driver reset looks like this),
+  6 a GPU error at start (self-test or qualification failed, out of GPU memory; retried as well), 3 forced shutdown.
+- **The window closed before you could read it** - start the miner through `Start-redpearl-miner.bat`, which keeps
+  the window open; the exe itself also waits for Enter when it stops with an error and was started by a double-click.
+- **The taskbar shows the Windows Terminal icon, not the pearl** - the launcher opens the classic console window so
+  the icon and title are redPeaRL's; a terminal you opened yourself keeps its own icon.
 
 ## Logs and reporting
 
@@ -156,7 +167,33 @@ expected. support@redpearlminer.com.
 
 ## Linux
 
-A Linux build, including a container image for rented GPUs, is in development. Beta testers hear first.
+The Linux package (`redpearl-miner-<version>-linux-x64.tar.gz`) holds the same files as the Windows one: the binary,
+the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents. It is the build our own rented
+GPUs run.
+
+Requirements:
+
+- x86-64, glibc 2.38 or newer: Ubuntu 24.04, Debian 13, Fedora 40 or newer. (Ubuntu 22.04 and HiveOS are too old.)
+- The AMD ROCm HIP runtime, 6.4 or newer, with the amdgpu driver: `amdgpu-install --usecase=hip` (or `rocm`) from
+  AMD's instructions for your distribution. The miner loads `libamdhip64` from `/opt/rocm/lib` at start; nothing else
+  from ROCm is needed, the kernels ship precompiled.
+- Your user in the `render` and `video` groups (log out and in after adding them).
+
+Run it:
+
+```
+tar xzf redpearl-miner-<version>-linux-x64.tar.gz
+cd redpearl-miner-<version>-linux-x64
+./start-redpearl-miner.sh
+```
+
+The first start writes `redpearl.toml` and stops; fill in your wallet as on Windows, then start again. The script
+restarts the miner after an error exit the same way the Windows launcher does and stops on Ctrl+C. Differences from
+Windows: the log file is off by default (set `file = "miner.log"` under `[log]` to get one), and board power, clock
+and temperatures come from the amdgpu `hwmon` interface, which a container usually does not expose (then the line
+shows `power n/a`).
+
+Running it on rented machines: the same binary ships as a container image; ask us.
 
 ## Credits and licence
 
