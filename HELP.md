@@ -153,7 +153,8 @@ the same status line. Good for comparing settings.
   if it keeps happening, put the card at stock. `stall_seconds` in `[advanced]` changes the limit, 0 switches it off.
 - **Exit codes** the launcher reacts to: 0 stopped by you, 2 a configuration message (the launcher stops so you
   can read it), 4 GPU stall, 5 no usable GPU found (the launcher retries - a driver reset looks like this),
-  6 a GPU error at start (self-test or qualification failed, out of GPU memory; retried as well), 3 forced shutdown.
+  6 a GPU error at start (self-test or qualification failed, out of GPU memory; retried as well), 7 a GPU error
+  while mining (retried), 3 forced shutdown.
 - **The window closed before you could read it** - start the miner through `Start-redpearl-miner.bat`, which keeps
   the window open; the exe itself also waits for Enter when it stops with an error and was started by a double-click.
 - **The taskbar shows the Windows Terminal icon, not the pearl** - the launcher opens the classic console window so
