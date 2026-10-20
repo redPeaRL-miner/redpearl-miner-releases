@@ -2,6 +2,15 @@
 
 All redPeaRL releases, newest first. 0.7.0-beta.1 (16 Oct 2026) had a start-up fault and was never distributed.
 
+## 0.7.0-beta.5.1 (19 Oct 2026) - hotfix: no stop after 36 hours
+
+### Fixed in beta.5.1
+
+- **The miner no longer stops after about a day and a half.** beta.5 kept a lifetime total of the work done in a 64-bit counter and stopped when it filled up: after about 36 hours on an RX 9070 XT, about 71 hours on an RX 9060 XT. It then exited with code 0, which the launcher reads as a stop by you, so it did not restart. The counter now wraps around (hashrate is computed from differences, so nothing else changes), checked on an RX 9070 XT with the counter started just below the limit.
+- **A GPU error while mining now exits with code 7** instead of 0, so the launcher restarts the miner. HELP.md lists the exit codes.
+
+Everything else is beta.5 unchanged: status line every 10 seconds, GPU hang detection, launcher restarts after errors, Linux package, icon and title, RC counter.
+
 ## 0.7.0-beta.5 (19 Oct 2026) - GPU hang detection, 10-second status, Linux package
 
 ### New in beta.5
