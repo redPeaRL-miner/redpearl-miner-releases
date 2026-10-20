@@ -2,6 +2,22 @@
 
 All redPeaRL releases, newest first. 0.7.0-beta.1 (16 Oct 2026) had a start-up fault and was never distributed.
 
+## 0.7.0-beta.5 (19 Oct 2026) - GPU hang detection, 10-second status, Linux package
+
+### New in beta.5
+
+- **Status line every 10 seconds** (was 30). `status_seconds` under `[log]` sets it, 5 to 600.
+- **GPU hang detection.** The miner no longer waits forever on a GPU that stops answering. A batch that has not finished after 15 seconds (a normal batch takes well under a second) is reported with its details and the pending driver error, and the miner exits with code 4 so the launcher can restart it. A 90-second status watchdog remains as a backstop (`stall_seconds` under `[advanced]`; 0 switches it off). Found on a rented card that stopped completing work 30 seconds into every run.
+- **Launcher restarts after errors.** Any exit other than a clean stop (code 0) or a configuration message (code 2) is restarted, including "no usable GPU" (code 5, what a driver reset looks like) and GPU errors at start (code 6). Config messages stay on screen.
+- **Linux package** (`redpearl-miner-0.7.0-beta.5-linux-x64.tar.gz`): the same binary our rented GPUs run. glibc 2.38 or newer (Ubuntu 24.04+) and the AMD ROCm HIP runtime 6.4 or newer; `start-redpearl-miner.sh` works like the Windows launcher. HELP.md, section Linux.
+- **redPeaRL icon and title** on the console window, the taskbar and the exe itself (version block in the file properties). Under Windows Terminal the launcher opens the classic console window so the icon shows.
+- **`RC n` on the status line** after the pool connection was lost and re-made n times.
+- **No more coin prompt** when the exe is started directly: it mines PRL. An exe started by a double-click that stops with an error now waits for Enter instead of closing at once.
+
+### Unchanged from beta.4
+
+Usage-stats fix, Rabid Pool preset, dynamic-Huffman compressed proofs for Kryptex (GZIP v2), the efficiency change for power-limited cards. One GPU per process.
+
 ## 0.7.0-beta.4 (17 Oct 2026) - usage stats fixed; first public-beta build
 
 First build of the public beta. (Internal builds made on 17 Oct while this fix was being chased were never
