@@ -1,8 +1,8 @@
 # redPeaRL - help
 
 redPeaRL is a Pearl (PRL) miner built for the AMD Radeon RX 9070 XT and RX 9060 XT (RDNA4). Nothing else: no
-NVIDIA cards, no Radeon generations before RDNA4. This is a closed-beta build; please report what you see to
-support@redpearlminer.com.
+NVIDIA cards, no Radeon generations before RDNA4. This is a public beta for Windows and Linux; please report what you
+see to support@redpearlminer.com.
 
 ## Quick start (Windows)
 
@@ -19,8 +19,10 @@ If Windows Defender stops the download or the exe, see "Windows Defender" below.
 
 ## What a healthy start looks like
 
+From our own RX 9070 XT at a 288 W power limit (Windows); your numbers depend on the card and its settings.
+
 ```
-redPeaRL 0.7.0-beta.4 x86-64-v2
+redPeaRL 0.7.0-beta.6 x86-64-v2
 log: C:\redPeaRL\miner.log (10 MB x 5 files)
 GPU 0: AMD Radeon RX 9070 XT
 config: C:\redPeaRL\redpearl.toml, 3 setting(s)
@@ -29,12 +31,13 @@ self-test: PASS (GPU 0, gfx1201)
 shape 4096 x 65536 x 8192, batch 4
 mining started - status every 10 s
 Stratum: share accepted (57 ms)
-redPeaRL 0.7.0-beta.4 | 140.7 TH/s | 140.7 avg 1m | A 1 R 0 | 488 GH/J 288 W 2.50 GHz 751 mV | 48C hot 75C mem 74C fan 1747 rpm
+redPeaRL 0.7.0-beta.6 | 144.6 TH/s | 144.3 avg 15m | A 70 R 0 | 502 GH/J 288 W 2.53 GHz 750 mV | 54C hot 85C mem 82C fan 1033 rpm
 ```
 
-The status line, left to right: hashrate now and the 1-minute (later 15-minute) average, shares accepted (A) and
-rejected (R) - and `RC n` after the pool connection was lost and re-made n times - efficiency in GH per joule, board power, GPU clock and voltage, edge / hotspot / memory temperatures and
-fan speed. The hashrate is pool-equivalent: what the pool credits per worker matches this figure.
+The status line, left to right: hashrate now and the average since start (up to the last 15 minutes), shares accepted
+(A) and rejected (R) - and `RC n` after the pool connection was lost and re-made n times - efficiency in GH per joule,
+board power, GPU clock and voltage, edge / hotspot / memory temperatures and fan speed. The hashrate is
+pool-equivalent: what the pool credits matches it within normal luck (less the 1 % fee).
 
 ## redpearl.toml
 
@@ -45,17 +48,17 @@ containers) sit in between.
 |---|---|
 | `wallet` | your PRL address (required) |
 | `worker` | the name shown at the pool for this machine |
-| `pool` | `kryptex`, `herominers`, `luckypool`, `pearlfortune`, or a URL such as `"stratum+ssl://host"` |
+| `pool` | `kryptex`, `herominers`, `luckypool`, `pearlfortune`, `rabidmining`, or a URL such as `"stratum+ssl://host"` |
 | `region` | region of the preset (`us`, `eu`, ...) or `auto` = the fastest from here (default) |
 | `port`, `password` | only for a URL pool, or a pool that asks for a password |
 | `device` | GPU index to mine on, only with several GPUs (one GPU per process in this beta) |
 | `[log] level` | `quiet`, `normal`, `verbose`, `debug` |
-| `[log] file`, `file_size_mb`, `file_count` | the log file ring (default `miner.log` next to the exe, 10 MB x 5) |
+| `[log] file`, `file_size_mb`, `file_count` | the log file ring (default `miner.log` next to the miner, 10 MB x 5; `file = "off"` turns it off) |
 | `[log] status_seconds` | seconds between the status lines in the console, 5-600 (default 10) |
 | `stats` | anonymous usage stats, `true` (default) or `false` - see below |
 | `accept_eula` | `true` once you have read EULA.md and agree; the miner does not run until then |
 | `[advanced] batch` | attempts per GPU batch, 4-32; the default 4 is best on power-limited cards |
-| `[advanced] shape` | the matrix shape; leave it unless asked |
+| `[advanced] shape` | the matrix shape `m,n,k`; leave it unless asked (since beta.6 the miner refuses an `n` that is not a multiple of 256) |
 
 A wrong key or value stops the miner at start with a message naming the key and the allowed values.
 
@@ -73,8 +76,9 @@ A wrong key or value stops the miner at start with a message naming the key and 
 ## The fee
 
 redPeaRL charges a 1 % developer fee: about 14 minutes in every 24 hours, your GPU mines to the developer's wallet.
-The fee is written into the log as it happens. It connects to Kryptex; if Kryptex cannot be reached, your own mining
-is not affected and the fee connection retries later. Your mining never waits for the fee. There is no subscription
+The fee is written into the log as it happens. It connects to Kryptex; if Kryptex cannot be reached three times in a
+row, the fee mines on your own pool as a separate developer worker and tries Kryptex again an hour later. Your mining
+never waits for the fee. There is no subscription
 and no hidden switching; the anonymous usage stats are described in the next section and switched off with one line.
 
 ## Usage stats (pseudonymous)
@@ -94,11 +98,11 @@ but nothing in them identifies you. Every 5 minutes while mining, one small HTTP
 - on a fatal error: one crash record with the error and the last log lines.
 
 Never sent: your wallet address, worker name, pool password, computer name, user name, files, or anything you typed.
-Before any error text or log lines leave the machine, the wallet, worker name, password, Windows user name, file and
+Before any error text or log lines leave the machine, the wallet, worker name, password, your user name, file and
 folder paths and host names are removed from them. The receiving end discards the IP address; nothing is logged with
 it. We keep the records for 180 days, then they are deleted automatically; we cannot delete single records earlier,
 but with `stats = false` no new records are created and the old ones expire. Deleting `redpearl-stats-id.txt` gives
-your installation a new id. Questions about this data: admin@redpearlminer.com. The stats tell us which cards and
+your installation a new id. Privacy and data requests: admin@redpearlminer.com. The stats tell us which cards and
 settings work and where it breaks, which is what a beta is for.
 
 ## Licence
@@ -119,15 +123,12 @@ at a time and watch the status line for a few minutes.
 
 ## Windows Defender
 
-The beta build is not yet code-signed, and Defender tends to flag unsigned mining software (it may name a generic
-family such as "Bearfoos"). It is a false positive for this file; check the SHA-256 in `BUILD.txt` against the
-download page if you want to be sure. To run it:
+Defender may flag mining software (for example as "Bearfoos"). If the SHA-256 of `redpearl-miner.exe` matches the
+release page, it is a false positive. To run it:
 
 1. Windows Security > Virus & threat protection > Manage settings > Exclusions > Add an exclusion > Folder, and
    choose the folder you unzipped redPeaRL into.
 2. If Defender already removed the exe, restore it from Protection history, then add the exclusion.
-
-A signed build is planned for the release.
 
 ## Benchmark without a pool
 
@@ -162,15 +163,15 @@ the same status line. Good for comparing settings.
 
 ## Logs and reporting
 
-`miner.log` next to the exe holds everything the console shows (10 MB x 5 files by default). When you report a
-problem, attach the log or its last 200 lines, your card model, your Adrenalin power/voltage settings, and what you
+`miner.log` next to the miner (the exe on Windows, the binary on Linux) holds everything the console shows (10 MB x 5
+files by default). When you report a problem, attach the log or its last 200 lines, your card model, your Adrenalin power/voltage settings, and what you
 expected. support@redpearlminer.com.
 
 ## Linux
 
 The Linux package (`redpearl-miner-<version>-linux-x64.tar.gz`) holds the same files as the Windows one: the binary,
-the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents. It is the build our own rented
-GPUs run.
+the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents. It is the build our test fleet
+runs.
 
 Requirements:
 
@@ -189,10 +190,9 @@ cd redpearl-miner-<version>-linux-x64
 ```
 
 The first start writes `redpearl.toml` and stops; fill in your wallet as on Windows, then start again. The script
-restarts the miner after an error exit the same way the Windows launcher does and stops on Ctrl+C. Differences from
-Windows: the log file is off by default (set `file = "miner.log"` under `[log]` to get one), and board power, clock
-and temperatures come from the amdgpu `hwmon` interface, which a container usually does not expose (then the line
-shows `power n/a`).
+restarts the miner after an error exit the same way the Windows launcher does and stops on Ctrl+C. As on Windows, the
+miner writes `miner.log` next to the binary. One difference: board power, clock and temperatures come from the amdgpu
+`hwmon` interface, which a container usually does not expose (then the line shows `power n/a`).
 
 Running it on rented machines: the same binary ships as a container image; ask us.
 
