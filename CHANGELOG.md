@@ -1,5 +1,9 @@
 # redPeaRL changelog
 
+## 0.7.0-beta.6.1 (21 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.6.1)
+- Fixed the Windows exe failing to start on Windows 10 ("Entry Point Not Found: SHGetPropertyStoreForWindow", since beta.5)
+- Windows only; Linux stays on beta.6
+
 ## 0.7.0-beta.6 (21 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.6)
 - ~2 % higher hashrate and efficiency on RX 9070 XT and RX 9060 XT
 - Invalid custom `shape` values (n not a multiple of 256) are now refused at start instead of mining nothing
