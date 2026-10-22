@@ -1,12 +1,8 @@
 # redPeaRL changelog
 
-## 0.7.0-beta.7 (22 Oct 2026) - no shares lost on job refresh
-
-### Changed
-- Shares found right after a pool job refresh (about every 40 s) are now sent instead of dropped: about 0.1 % more credited work. Kryptex, HeroMiners and LuckyPool were tested and credit these shares.
+## 0.7.0-beta.7 (22 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.7)
+- Shares found right after a pool job refresh (about every 40 s) are now sent instead of dropped: about 0.1 % more credited work
 - If a pool refuses such a share, the miner stops doing this on that connection (one log line)
-
-Same kernels and hashrate as beta.6.1, including its Windows 10 fix. No config changes needed: replace the folder, keep your `redpearl.toml`. Linux requires the ROCm HIP runtime 6.4 or newer. Setup: HELP.md in the package, or https://redpearlminer.com/#install.
 
 ## 0.7.0-beta.6.1 (21 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.6.1)
 - Fixed the Windows exe failing to start on Windows 10 ("Entry Point Not Found: SHGetPropertyStoreForWindow", since beta.5)
