@@ -1,5 +1,11 @@
 # redPeaRL changelog
 
+## 0.7.0-beta.7.1 (23 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.7.1)
+- PCs with integrated graphics (most Ryzen CPUs) no longer stop with "requires exactly one selected GPU": the miner picks the RX 9070 / 9060 card and says which GPU it skipped
+- Closing the miner during the start-up self-test is a normal stop, not a "qualification failed" error
+- A second copy of redPeaRL on a GPU that is already mining now stops at once with "another redPeaRL is already mining on this GPU" instead of failing the self-test
+- When the self-test fails, the log says what to do: close another miner or game using the GPU, or reset an unstable overclock / undervolt in AMD Software
+
 ## 0.7.0-beta.7 (22 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.7)
 - Shares found right after a pool job refresh (about every 40 s) are now sent instead of dropped: about 0.1 % more credited work
 - If a pool refuses such a share, the miner stops doing this on that connection (one log line)
