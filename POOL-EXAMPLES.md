@@ -23,6 +23,11 @@ every 70 s), which is right for one card per worker. If one worker aggregates se
 raise it with the password line: d = hashrate in H/s x seconds between shares / 4,294,967,296 (Kryptex's formula).
 Values below the default are ignored by the pool.
 
+Paid in BTC instead: Kryptex also takes your Kryptex account in place of a PRL address - the Mining Username from your
+Kryptex profile (`wallet = "krx..."`) or the account email (`wallet = "you@example.com"`). The earnings then go to your
+Kryptex account, which can auto-exchange them to BTC. The app's pool panel shows "paid via your Kryptex account" in this
+case; the balance is on kryptex.com.
+
 ## HeroMiners (PROP, TLS)
 
 ```toml
