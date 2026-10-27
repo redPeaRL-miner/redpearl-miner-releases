@@ -17,6 +17,17 @@ see to support@redpearlminer.com.
 
 If Windows Defender stops the download or the exe, see "Windows Defender" below.
 
+## The app (redpearl-app.exe)
+
+The package also holds `redpearl-app.exe`, a small window around the miner. Double-click it instead of the batch file:
+on the first start it opens Setup, where you paste your wallet, name the worker, pick a pool and accept the EULA; it
+writes `redpearl.toml` for you. Then tap the coin to start mining and again to stop. The window shows the live
+hashrate, power, temperatures, shares, what the pool reports for your wallet, an earnings estimate, and the log with
+filters; "Copy for bug report" puts everything support needs on the clipboard with your wallet masked. The app starts
+`redpearl-miner.exe` from its own folder, so keep the two exes and `kernels\` together. Closing the window stops the
+miner. The batch file and the console keep working as before; use whichever you prefer. The app is Windows-only in
+this beta; on Linux use the console path (see "Linux").
+
 ## What a healthy start looks like
 
 From our own RX 9070 XT at a 288 W power limit (Windows); your numbers depend on the card and its settings.
