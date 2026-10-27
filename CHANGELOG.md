@@ -1,5 +1,9 @@
 # redPeaRL changelog
 
+## 0.7.0-beta.8.3 (27 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.3)
+- The wallet field accepts your Kryptex account: the Mining Username from your Kryptex profile (krx...) or the account email. The earnings then go into your Kryptex account, which can auto-exchange them to BTC. Setup no longer refuses a login just because it isn't a prl1 address, and the pool panel shows "paid via your Kryptex account"
+- An email login keeps its worker name (you@example.com/rig1)
+
 ## 0.7.0-beta.8.2 (27 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.2)
 - **redpearl-app.exe** (Windows): double-click it instead of the batch file. First start opens Setup (wallet, worker, pool, EULA) and writes `redpearl.toml`; then tap the coin to mine
 - Live view: hashrate, efficiency, power, temperatures, shares, uptime, a 60-minute chart with the pool's figure, your wallet's pool stats, an earnings estimate
