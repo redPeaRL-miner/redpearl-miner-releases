@@ -1,5 +1,17 @@
 # redPeaRL changelog
 
+## 0.7.0-beta.8.5 (28 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.5)
+- **Alpha Pool** preset: `pool = "alphapool"`, also in the app
+- **Update notice**: the log and a green **Update** badge in the app say when a newer release is out (hourly check; nothing is downloaded; `RP_UPDATE_CHECK=0` turns it off)
+- **Share difficulty** in the log and the app
+- **Hot-card warning** at 100 C hotspot
+- **Linux**: GPU temperatures, clock, voltage and fan, also under WSL2
+- Windows: greatly reduced CPU usage while mining (about 7 % of one core)
+- The start-up self-test waits and retries when another program is busy on the GPU
+- Windows: GPU sensors on older AMD drivers
+- Clearer "no GPU" message
+- A network outage counts as one reconnect
+
 ## 0.7.0-beta.8.3 (27 Oct 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.3)
 - The wallet field accepts your Kryptex account: the Mining Username from your Kryptex profile (krx...) or the account email. The earnings then go into your Kryptex account, which can auto-exchange them to BTC. Setup no longer refuses a login just because it isn't a prl1 address, and the pool panel shows "paid via your Kryptex account"
 - An email login keeps its worker name (you@example.com/rig1)
