@@ -50,6 +50,10 @@ The status line, left to right: hashrate now and the average since start (up to 
 board power, GPU clock and voltage, edge / hotspot / memory temperatures and fan speed. The hashrate is
 pool-equivalent: what the pool credits matches it within normal luck (less the 1 % fee).
 
+When the hotspot temperature reaches 100 C the miner prints `GPU hot: hotspot ...C` (again every 10 minutes while it
+stays above 95 C, and a line when it is back to normal). The card slows itself down when it runs that hot: check the
+fans, the airflow in the case and the power limit in AMD Software.
+
 ## redpearl.toml
 
 All settings live in one file next to the exe. Command-line flags override it; `RP_*` environment variables (used in
@@ -59,7 +63,7 @@ containers) sit in between.
 |---|---|
 | `wallet` | your PRL address (required) |
 | `worker` | the name shown at the pool for this machine |
-| `pool` | `kryptex`, `herominers`, `luckypool`, `pearlfortune`, `rabidmining`, or a URL such as `"stratum+ssl://host"` |
+| `pool` | `kryptex`, `herominers`, `luckypool`, `pearlfortune`, `rabidmining`, `alphapool`, or a URL such as `"stratum+ssl://host"` |
 | `region` | region of the preset (`us`, `eu`, ...) or `auto` = the fastest from here (default) |
 | `port`, `password` | only for a URL pool, or a pool that asks for a password |
 | `device` | GPU index to mine on, only with several GPUs (one GPU per process in this beta) |
@@ -77,7 +81,11 @@ A wrong key or value stops the miner at start with a message naming the key and 
 
 - **Kryptex** - fully supported: TLS, every region, worker names, and Kryptex's compressed-proof protocol.
 - **HeroMiners**, **LuckyPool**, **PearlFortune**, **Rabid Pool** (`pool = "rabidmining"`, PPLNS; SOLO via
-  `pool = "stratum+tcp://prl.rabidmining.com:9934"`) - presets; the login form each pool wants is handled for you.
+  `pool = "stratum+tcp://prl.rabidmining.com:9934"`), **Alpha Pool** (`pool = "alphapool"`, PROP) - presets; the login
+  form each pool wants is handled for you.
+- The log shows the share difficulty the pool sets (`pool: share difficulty ...`, once per change). On a pool that
+  adjusts it per worker (vardiff) the shares per minute change with it; a higher difficulty means fewer, bigger shares,
+  not less pay.
 - Ready-to-paste config blocks for every pool are in `POOL-EXAMPLES.md` in this folder.
 - Any other Pearl stratum pool: `pool = "stratum+ssl://host"` (or `stratum+tcp://`) and `port = ...`. Tell us which
   one, and we will add it as a preset.
@@ -101,7 +109,7 @@ but nothing in them identifies you. Every 5 minutes while mining, one small HTTP
 
 - a random install id (`redpearl-stats-id.txt` next to the exe; delete it to get a new one),
 - miner version, operating system version,
-- GPU model, architecture, VRAM size,
+- GPU model, architecture, VRAM size, the AMD driver's ADLX version (Windows),
 - your settings: pool preset, batch, shape, log level, which pool the fee is on, whether the EULA is accepted,
 - the status-line numbers: hashrate, 15-minute average, accepted and rejected shares, GH/J, power, clock, voltage,
   temperatures, fan speed, uptime,
@@ -115,6 +123,14 @@ it. We keep the records for 180 days, then they are deleted automatically; we ca
 but with `stats = false` no new records are created and the old ones expire. Deleting `redpearl-stats-id.txt` gives
 your installation a new id. Privacy and data requests: admin@redpearlminer.com. The stats tell us which cards and
 settings work and where it breaks, which is what a beta is for.
+
+## Update check
+
+At start and then every hour the miner asks GitHub for the latest redPeaRL release (one plain request to
+api.github.com; no install id, wallet or other data is sent) and, when it is newer than yours, prints one line such as
+`update: redPeaRL 0.7.0-beta.8.6 is available (this is 0.7.0-beta.8.5) - <download page>`; the app shows a green
+Update badge in its header that opens the download page. It never downloads or installs anything. `RP_UPDATE_CHECK=0`
+in the environment turns the check off.
 
 ## Licence
 
@@ -181,8 +197,8 @@ expected. support@redpearlminer.com.
 ## Linux
 
 The Linux package (`redpearl-miner-<version>-linux-x64.tar.gz`) holds the same files as the Windows one: the binary,
-the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents. It is the build our test fleet
-runs.
+the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents, plus `lib/` with AMD's GPU
+sensor library for WSL2 (see below). It is the build our test fleet runs.
 
 Requirements:
 
@@ -202,8 +218,11 @@ cd redpearl-miner-<version>-linux-x64
 
 The first start writes `redpearl.toml` and stops; fill in your wallet as on Windows, then start again. The script
 restarts the miner after an error exit the same way the Windows launcher does and stops on Ctrl+C. As on Windows, the
-miner writes `miner.log` next to the binary. One difference: board power, clock and temperatures come from the amdgpu
-`hwmon` interface, which a container usually does not expose (then the line shows `power n/a`).
+miner writes `miner.log` next to the binary. One difference: on a Linux PC, board power, clock, voltage, temperatures
+and fan come from the amdgpu `hwmon` interface, which a container usually does not expose. Under WSL2 (Linux on a
+Windows PC) the card belongs to the Windows driver: clock, voltage, temperatures and fan then come from AMD's WSL sensor
+library - `/opt/rocm-wsl` when AMD's `rocdxg-amd-smi-lib` is installed, else the copy in `lib/` - and board power shows
+`power n/a` (that library reports none).
 
 Running it on rented machines: the same binary ships as a container image; ask us.
 
