@@ -71,6 +71,18 @@ worker = "rig1"
 pool   = "stratum+tcp://prl.rabidmining.com:9934"
 ```
 
+## Alpha Pool (PROP)
+
+```toml
+wallet = "prl1pyourwalletaddress..."
+worker = "rig1"
+pool   = "alphapool"
+region = "auto"            # or us1 (US east) | us2 (US west) | eu1 | ru1 | sg1
+```
+
+Alpha Pool sets the share difficulty per worker (vardiff): the first minutes show many shares, then fewer as the pool
+raises the difficulty. The log has a `pool: share difficulty ...` line each time the pool changes it.
+
 ## Any other Pearl stratum pool
 
 ```toml
