@@ -113,6 +113,13 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 contrib/Orochi/contrib/hipew - Copyright 2011-2021 Blender Foundation.
 Licensed under the Apache License, Version 2.0 (text below).
 
+## AMD SMI for WSL (Linux package and container image only)
+
+lib/libamd_smi.so.1 in the Linux package and the container image - rocdxg-amd-smi-lib 1.2.2, a WSL build of AMD SMI
+(https://github.com/ROCm/librocdxg, upstream https://github.com/ROCm/amdsmi). Copyright (c) Advanced Micro Devices,
+Inc. MIT License (text as for Orochi above, with that copyright line; also shipped as lib/LICENSE-amd-smi.txt). Loaded
+at run time for GPU sensors under WSL2; not part of the Windows package.
+
 ## AMD Display Library SDK header
 
 include/adl_defines.h - Copyright (c) 2016 - 2022 Advanced Micro Devices, Inc. MIT License (text as for
