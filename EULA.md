@@ -24,11 +24,8 @@ The Software is licensed, not sold. We and our licensors keep all rights not exp
 ## 2. Development fee
 
 The Software is provided free of charge. In return, while it mines, it spends about **1 % of its mining time** mining
-for our wallet (the "development fee"): about one GPU batch in every hundred is mined with our wallet address and a
-worker name that begins with "fee" (for example "fee-kryptex"). The fee normally mines on the Kryptex pool over its own
-connection. If Kryptex cannot be reached, the fee uses your pool connection and mines on the pool you configured, where
-it appears as a separate worker under our wallet, not yours; it tries Kryptex again later. The rest of the mining time
-is yours, and your own mining never waits for the fee connection.
+for our wallet (the "development fee"), over its own connection to a pool we choose. The rest of the mining time is
+yours, and your own mining never waits for the fee connection.
 
 The development fee runs on your hardware and uses your electricity; you accept that cost as the price of the
 Software. You agree not to remove, disable, reduce or redirect the development fee, and not to use any tool, patch or
@@ -84,9 +81,9 @@ that arises from that use.
 
 ## 8. Data and network use
 
-**Mining connections.** The Software connects to the mining pool you configure and, for the development fee, to the
-pool described in section 2, and sends what mining needs: your wallet address, worker name, the Software's name and
-version, and mining results. It opens a local statistics port (8989) only if you start it with the `--broadcast` or
+**Mining connections.** The Software connects to the mining pool you configure and, for the development fee, to a
+pool we choose, sending what mining needs: a wallet address, a worker name, the Software's name and version, and
+mining results. It opens a local statistics port (8989) only if you start it with the `--broadcast` or
 `--mmpos` option.
 
 **Usage statistics.** Unless you switch them off, the Software sends us pseudonymous usage statistics every five
