@@ -6,7 +6,8 @@ see to support@redpearlminer.com.
 
 ## Quick start (Windows)
 
-1. Unzip the package anywhere, for example `C:\redPeaRL\`. Keep `kernels\` next to `redpearl-miner.exe`.
+1. Unzip the package anywhere, for example `C:\redPeaRL\`. The GPU kernels are built into `redpearl-miner.exe`; there is
+   nothing else to install.
 2. Double-click `Start-redpearl-miner.bat`. On the first start the miner writes `redpearl.toml` next to the exe and
    stops, telling you to fill in your wallet.
 3. Open `redpearl.toml` in Notepad. Remove the `#` in front of the `wallet = ` line and paste your PRL wallet address
@@ -24,7 +25,7 @@ on the first start it opens Setup, where you paste your wallet, name the worker,
 writes `redpearl.toml` for you. Then tap the coin to start mining and again to stop. The window shows the live
 hashrate, power, temperatures, shares, what the pool reports for your wallet, an earnings estimate, and the log with
 filters; "Copy for bug report" puts everything support needs on the clipboard with your wallet masked. The app starts
-`redpearl-miner.exe` from its own folder, so keep the two exes and `kernels\` together. Closing the window stops the
+`redpearl-miner.exe` from its own folder, so keep the two exes together. Closing the window stops the
 miner. The batch file and the console keep working as before; use whichever you prefer. The app is Windows-only in
 this beta; on Linux use the console path (see "Linux").
 
@@ -94,11 +95,8 @@ A wrong key or value stops the miner at start with a message naming the key and 
 
 ## The fee
 
-redPeaRL charges a 1 % developer fee: about 14 minutes in every 24 hours, your GPU mines to the developer's wallet.
-The fee is written into the log as it happens. It connects to Kryptex; if Kryptex cannot be reached three times in a
-row, the fee mines on your own pool as a separate developer worker and tries Kryptex again an hour later. Your mining
-never waits for the fee. There is no subscription
-and no hidden switching; the anonymous usage stats are described in the next section and switched off with one line.
+redPeaRL charges a 1 % developer fee: about 1 % of mining time mines to the developer's wallet over its own connection
+to a pool we choose. Your own mining never waits for it.
 
 ## Usage stats (pseudonymous)
 
@@ -114,6 +112,9 @@ but nothing in them identifies you. Every 5 minutes while mining, one small HTTP
 - the status-line numbers: hashrate, 15-minute average, accepted and rejected shares, GH/J, power, clock, voltage,
   temperatures, fan speed, uptime,
 - health: self-test result, number of error lines since start, the last error message, pool reconnect count,
+- GPU memory: how much VRAM was free when the mining buffers were sized and how much they needed, the card's used
+  VRAM now and its peak since, and whether the per-card search path is on, off (and why) or fell back to the
+  standard kernel,
 - on a fatal error: one crash record with the error and the last log lines.
 
 Never sent: your wallet address, worker name, pool password, computer name, user name, files, or anything you typed.
@@ -196,16 +197,16 @@ expected. support@redpearlminer.com.
 
 ## Linux
 
-The Linux package (`redpearl-miner-<version>-linux-x64.tar.gz`) holds the same files as the Windows one: the binary,
-the `kernels/` folder, `start-redpearl-miner.sh`, `redpearl.toml` and these documents, plus `lib/` with AMD's GPU
-sensor library for WSL2 (see below). It is the build our test fleet runs.
+The Linux package (`redpearl-miner-<version>-linux-x64.tar.gz`) holds the same files as the Windows one: the binary
+(with the GPU kernels built in), `start-redpearl-miner.sh`, `redpearl.toml` and these documents, plus `lib/` with AMD's
+GPU sensor library for WSL2 (see below). It is the build our test fleet runs.
 
 Requirements:
 
 - x86-64, glibc 2.38 or newer: Ubuntu 24.04, Debian 13, Fedora 40 or newer. (Ubuntu 22.04 and HiveOS are too old.)
 - The AMD ROCm HIP runtime, 6.4 or newer, with the amdgpu driver: `amdgpu-install --usecase=hip` (or `rocm`) from
   AMD's instructions for your distribution. The miner loads `libamdhip64` from `/opt/rocm/lib` at start; nothing else
-  from ROCm is needed, the kernels ship precompiled.
+  from ROCm is needed, the kernels are precompiled and built into the binary.
 - Your user in the `render` and `video` groups (log out and in after adding them).
 
 Run it:
