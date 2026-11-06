@@ -1,5 +1,16 @@
 # redPeaRL changelog
 
+## 0.7.0-beta.8.8 (6 Nov 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.8)
+- **Hotfix – CPU usage**: beta.8.7 used one full CPU core while mining with the optimized kernel. It now uses about a tenth of a core on Windows, with the same hashrate
+- **Optimized mining kernel** for the RX 9070 XT and RX 9060 XT: the miner picks it per card at start (the log says which path runs). In our tests about +4 % on the RX 9070 XT and +8 % on the RX 9060 XT at the same power; shares, proofs and the pool protocol unchanged
+- **Memory report** in the usage stats: free and total GPU memory
+- **GPU kernels built into the miner**: no `kernels\` folder any more; the miner checks the built-in kernels against the build at start. Keep `redpearl-miner.exe` and `redpearl-app.exe` together
+- Local status API: the same memory figures (`RP_API_PORT`)
+- **Tuning suggestion – power limit:** you lose very little hashrate by capping power and gain a lot of efficiency and cooler temps. In AMD Adrenalin (Performance → Tuning → Custom) lower the Power Limit and watch the hashrate for the "knee" where it stops rising; a good start on an RX 9070 XT is ~285-290 W (about -10 to -15 %). Mining above the knee just adds heat
+- **Tuning suggestion – undervolt the core:** where the efficiency comes from. Apply a negative voltage offset; -80 to -100 mV is a typical stable range on an RX 9070 XT. Test each step 20-30 min — rejected shares, log errors or a driver reset mean back off
+- **Tuning suggestion – memory clock as low as it goes:** Pearl mining here is compute-bound, so VRAM clock barely affects hashrate. Underclock the memory; under a fixed power cap the watts it would have drawn go to the core instead, lifting your effective core clock a little and running cooler. Raising VRAM clock or "fast timings" gains nothing
+- **Tuning suggestion – order:** cap power, undervolt the core until just-stable, then drop memory to its minimum, re-checking stability (watch the A / R share counter) at each stage. One change at a time, at your own risk
+
 ## 0.7.0-beta.8.7 (6 Nov 2026) · [release](https://github.com/redPeaRL-miner/redpearl-miner-releases/releases/tag/v0.7.0-beta.8.7)
 - **Optimized mining kernel** for the RX 9070 XT and RX 9060 XT: the miner picks it per card at start (the log says which path runs). In our tests about +4 % on the RX 9070 XT and +8 % on the RX 9060 XT at the same power; shares, proofs and the pool protocol unchanged
 - **Memory report** in the usage stats: free and total GPU memory
