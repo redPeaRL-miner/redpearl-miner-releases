@@ -225,7 +225,7 @@ Windows PC) the card belongs to the Windows driver: clock, voltage, temperatures
 library - `/opt/rocm-wsl` when AMD's `rocdxg-amd-smi-lib` is installed, else the copy in `lib/` - and board power shows
 `power n/a` (that library reports none).
 
-Running it on rented machines: the same binary ships as a container image; ask us.
+Container image: the same binary also ships as a container image; ask us.
 
 ## Credits and licence
 
